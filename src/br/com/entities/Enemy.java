@@ -33,7 +33,6 @@ public class Enemy extends Entity {
 
 	public void tick() {
 		if (Game.rand.nextInt(100) < 30) {
-
 			if (isCollidingWithPlayer() == false) {
 				if ((int) x < Game.player.getX() && World.isFree((int) (x + speed), this.getY())
 						&& !isColliding((int) (x + speed), this.getY())) {
@@ -52,10 +51,9 @@ public class Enemy extends Entity {
 			} else {
 				if (Game.rand.nextInt(100) < 10) {
 					Game.player.life--;
-					System.out.println(Game.player.life);
+					Player.isDamaged = true;
 					if (Game.player.life <= 0) {
 						Game.player.life = 0;
-						
 					}
 				}
 			}
@@ -84,7 +82,7 @@ public class Enemy extends Entity {
 				continue;
 			}
 			Rectangle targetEnemy = new Rectangle(e.getX(), e.getY(), World.TILE_SIZE, World.TILE_SIZE);
-			if (enemyCurrent.intersects(targetEnemy)) {
+			if (enemyCurrent.intersects(targetEnemy)) {				
 				return true;
 			}
 		}
@@ -92,7 +90,7 @@ public class Enemy extends Entity {
 		return false;
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics g) {		
 		g.drawImage(enemyMove[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
 	}
 

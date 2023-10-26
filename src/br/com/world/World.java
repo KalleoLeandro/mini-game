@@ -46,7 +46,8 @@ public class World {
 					} else if (pixelAtual == 0xFFFF6A00) /* LARANJA */ {
 						// Weapon
 						tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Entity.TILE_FLOOR);
-						Game.entities.add(new Item(xx * 16, yy * 16, 16, 16, Entity.TILE_WEAPON));
+						Weapon weapon = new Weapon(xx * 16, yy * 16, 16, 16, Entity.TILE_WEAPON);
+						Game.entities.add(weapon);
 					} else if (pixelAtual == 0xFF00FF21) /* VERDE */ {
 						// Life
 						tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Entity.TILE_FLOOR);

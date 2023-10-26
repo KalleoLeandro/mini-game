@@ -45,7 +45,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static  final int SCALE = 4;
 	private Thread thread;
 
-	private BufferedImage image;
+	private static BufferedImage image;
 
 	public static List<Entity> entities;
 
@@ -84,14 +84,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		// Inicializando objetos
 		
 		ui = new Ui();
-		entities = new ArrayList<Entity>();
-		player = new Player(150,120, 16, 16, playerSheet.getSprite(0, 0, 16, 16));
-		enemies = new ArrayList<Enemy>(); 
-		entities.add(player);
-		world = new World("/mapa.png");		
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		
-
+		startWorld();
 	}
 
 	// Método principal
@@ -139,6 +132,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.tick();
+		}
+	}
+	
+	public static void startWorld() {
+		entities = new ArrayList<Entity>();
+		player = new Player(150,120, 16, 16, playerSheet.getSprite(0, 0, 16, 16));
+		enemies = new ArrayList<Enemy>(); 
+		entities.add(player);
+		world = new World("/mapa.png");		
+		try {
+			image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		} catch (Exception e) {
 		}
 	}
 
