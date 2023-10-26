@@ -6,6 +6,7 @@ package br.com.main;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,12 +14,15 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
+import br.com.entities.Enemy;
 import br.com.entities.Entity;
 import br.com.entities.Player;
 import br.com.graficos.Spritesheet;
+import br.com.graficos.Ui;
 import br.com.world.World;
 
 /**
@@ -38,7 +42,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	public static final int WIDTH = 320;
 	public static final int HEIGHT = 240;
-	public static  final int SCALE = 3;
+	public static  final int SCALE = 4;
 	private Thread thread;
 
 	private BufferedImage image;
@@ -59,17 +63,30 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public static Player player;
 	
+	//1a forma randomica
+	public static Random rand;
+	
+	//2a forma randomica
+	public static List<Enemy> enemies;
+	
+	public Ui ui;
+	
+	private int frames;
+	
 	
 
 	// Método inicialização thread game
 	public Game() {
+		rand = new Random();
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		initFrame();
 		// Inicializando objetos
 		
+		ui = new Ui();
 		entities = new ArrayList<Entity>();
-		player = new Player(150,120, 16, 16, playerSheet.getSprite(0, 0, 25, 32));
+		player = new Player(150,120, 16, 16, playerSheet.getSprite(0, 0, 16, 16));
+		enemies = new ArrayList<Enemy>(); 
 		entities.add(player);
 		world = new World("/mapa.png");		
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -144,10 +161,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			Entity e = entities.get(i);
 			e.render(g);
 		}
+		
+		ui.render(g);
 
 		g.dispose();
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		g.setFont(new Font("Arial", Font.BOLD, 20));
+		g.setColor(Color.WHITE);
+		g.drawString("Magia: " + player.ammo, 1100, 20);		
+		g.setColor(Color.WHITE);
+		g.drawString("FPS: " + frames, 1150, 950);
 		bs.show();
 	}
 
@@ -160,6 +184,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		double delta = 0;
 		int frames = 0;
 		double timer = System.currentTimeMillis();
+		requestFocus();
 		while (isRunning) {			
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
@@ -171,7 +196,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				frames++;				
 			}
 			if (System.currentTimeMillis() - timer >= 1000) {
-				System.out.println("FPS: "  + frames);
+				this.frames = frames;
 				frames = 0;
 				timer = System.currentTimeMillis();
 			}
