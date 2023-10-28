@@ -30,10 +30,12 @@ public class Player extends Entity {
 	private BufferedImage[] playerDamage;
 
 	public static boolean isDamaged;
-	
+
 	public static boolean hasGun;
-	
+
 	private int damageFrames = 0;
+
+	public boolean shoot = false;
 
 	public int ammo = 0;
 
@@ -108,22 +110,50 @@ public class Player extends Entity {
 		this.checkCollisionLifePack();
 
 		this.checkCollisionMagic();
-		
+
 		this.checkCollisionWeapon();
 		
-		if(isDamaged) {
+		if (shoot) {
+			shoot = false;
+			if (hasGun && ammo > 0) {
+				ammo--;
+				int dx = 0;
+				int dy = 0;
+				int px = 0;
+				int py = 8;
+				if (dir == up_dir) {
+					py = -18;
+					dy = -1;
+				} else if (dir == right_dir) {
+					px = 18;
+					dx = 1;
+				} else if (dir == down_dir) {
+					py = -18;
+					dy = 1;
+				} else if (dir == left_dir) {
+					px = -18;
+					dx = -1;
+				}
+				Spell spell = new Spell(this.getX(), this.getY(), 3, 3, null, dx, dy);
+				Game.spells.add(spell);
+			}
+		}
+
+		if (isDamaged) {
 			this.damageFrames++;
-			if(this.damageFrames == 30) {
+			if (this.damageFrames == 30) {
 				this.damageFrames = 0;
 				isDamaged = false;
 			}
 		}
-		
-		if(life <=80) {
+
+		if (life <= 0) {
 			life = 100;
-			Game.startWorld();			
+			Game.gameState = "GAME_OVER";			
 			return;
 		}
+
+		
 
 		Camera.x = Camera.clamp(this.getX() - Game.WIDTH / 2, 0, World.WIDTH * 16 - Game.WIDTH);
 		Camera.y = Camera.clamp(this.getY() - Game.HEIGHT / 2, 0, World.HEIGHT * 16 - Game.HEIGHT);
@@ -148,7 +178,7 @@ public class Player extends Entity {
 	public void checkCollisionMagic() {
 		for (Entity e : Game.entities) {
 			if (e instanceof Magic) {
-				if (Entity.isColliding(this, e)) {					
+				if (Entity.isColliding(this, e)) {
 					ammo += 10;
 					Game.entities.remove(e);
 					return;
@@ -156,12 +186,12 @@ public class Player extends Entity {
 			}
 		}
 	}
-	
+
 	public void checkCollisionWeapon() {
 		for (Entity e : Game.entities) {
 			if (e instanceof Weapon) {
-				if (Entity.isColliding(this, e)) {					
-					ammo += 10;
+				if (Entity.isColliding(this, e)) {
+					hasGun = true;
 					Game.entities.remove(e);
 					return;
 				}
@@ -174,16 +204,16 @@ public class Player extends Entity {
 		if (isDamaged) {
 			if (dir == up_dir) {
 				g.drawImage(playerDamage[0], this.getX() - Camera.x, this.getY() - Camera.y, null);
-				
+
 			} else if (dir == right_dir) {
 				g.drawImage(playerDamage[1], this.getX() - Camera.x, this.getY() - Camera.y, null);
-				
+
 			} else if (dir == down_dir) {
 				g.drawImage(playerDamage[2], this.getX() - Camera.x, this.getY() - Camera.y, null);
-				
+
 			} else if (dir == left_dir) {
 				g.drawImage(playerDamage[3], this.getX() - Camera.x, this.getY() - Camera.y, null);
-				
+
 			}
 		} else {
 			if (dir == up_dir) {

@@ -21,7 +21,7 @@ public class World {
 
 	public static Tile[] tiles;
 
-	public static int WIDTH, HEIGHT, TILE_SIZE = 16;
+	public static int WIDTH, HEIGHT, TILE_SIZE = 16;	
 
 	public World(String path) {
 		try {

@@ -22,6 +22,9 @@ public class Enemy extends Entity {
 
 	public BufferedImage[] enemyMove;
 
+	private int life = 2;
+	
+
 	// private int maskx = 8, masky = 8, maskw = 10, maskh = 10;
 
 	public Enemy(double x, double y, int width, int height, BufferedImage sprite) {
@@ -66,6 +69,12 @@ public class Enemy extends Entity {
 				index = 0;
 			}
 		}
+
+		collisionMagic();
+		if (life <= 0) {
+			destroySelf();
+		}	
+		
 	}
 
 	public boolean isCollidingWithPlayer() {
@@ -82,7 +91,7 @@ public class Enemy extends Entity {
 				continue;
 			}
 			Rectangle targetEnemy = new Rectangle(e.getX(), e.getY(), World.TILE_SIZE, World.TILE_SIZE);
-			if (enemyCurrent.intersects(targetEnemy)) {				
+			if (enemyCurrent.intersects(targetEnemy)) {
 				return true;
 			}
 		}
@@ -90,7 +99,23 @@ public class Enemy extends Entity {
 		return false;
 	}
 
-	public void render(Graphics g) {		
+	public void destroySelf() {
+		Game.enemies.remove(this);
+		Game.entities.remove(this);
+		
+	}
+
+	public void collisionMagic() {
+		for (Entity e : Game.spells) {
+			if (Entity.isColliding(this, e)) {
+				life--;
+				Game.spells.remove(e);
+				return;
+			}
+		}
+	}
+
+	public void render(Graphics g) {
 		g.drawImage(enemyMove[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
 	}
 
