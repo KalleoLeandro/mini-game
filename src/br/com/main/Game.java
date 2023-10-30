@@ -101,7 +101,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		ui = new Ui();		
 		String inicio = "/mapa1.png";
 		startWorld(inicio);
-		sound = new Sound("res/battle.wav");
+		//sound = new Sound("res/battle.wav");
 		menu = new Menu();
 	}
 

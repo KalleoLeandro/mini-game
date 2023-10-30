@@ -22,7 +22,7 @@ public class Enemy extends Entity {
 
 	public BufferedImage[] enemyMove;
 
-	private int life = 2;
+	private int life = 3;
 	
 
 	// private int maskx = 8, masky = 8, maskw = 10, maskh = 10;
